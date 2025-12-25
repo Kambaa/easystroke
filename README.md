@@ -39,6 +39,206 @@ sudo tar xzvf easystroke_install.tar.gz -C /
 
 
 
+# AppImage Generation: 
+With GPT's help, here's my steps to generate the file [Easystroke-x86_64.AppImage](Easystroke-x86_64.AppImage):
+
+First to get the deps: 
+That will tell us:
+Which libraries are missing
+Which should be bundled
+Which should be excluded (system libs like libc.so.6)
+```
+ldd easystroke
+```
+Easystroke can be AppImaged, but it’s a heavy GTK3 stack, so we must do it cleanly to avoid breakage.
+❌ Do NOT bundle (system / forbidden libs)
+These must stay system-provided or AppImage will break:
+```
+linux-vdso.so.1
+ld-linux-x86-64.so.2
+libc.so.6
+libm.so.6
+libpthread.so.0
+libdl.so.2
+libgcc_s.so.1
+libstdc++.so.6
+libselinux.so.1
+libsystemd.so.0
+```
+👉 AppImage tools automatically exclude these — don’t force them in.
+✅ Must bundle (important)
+These are the critical ones that make Easystroke portable:
+```
+Core
+
+libboost_serialization.so.1.83.0
+libsigc-2.0.so.0
+libglibmm-2.4.so.1
+libgiomm-2.4.so.1
+libcairomm-1.0.so.1
+libpangomm-1.4.so.1
+libatkmm-1.6.so.1
+libgtkmm-3.0.so.1
+libgdkmm-3.0.so.1
+
+
+GTK / graphics stack
+
+libgtk-3.so.0
+libgdk-3.so.0
+libpango*.so.*
+libcairo*.so.*
+libharfbuzz.so.0
+libfontconfig.so.1
+libfreetype.so.6
+libepoxy.so.0
+
+
+X11 / input (VERY important for Easystroke)
+
+libX11.so.6
+libXext.so.6
+libXi.so.6
+libXtst.so.6
+libXfixes.so.3
+libXcursor.so.1
+libXrandr.so.2
+libXinerama.so.1
+libXcomposite.so.1
+libXdamage.so.1
+
+
+Other required
+
+libdbus-1.so.3
+libdbus-glib-1.so.2
+libxcb*.so.*
+libwayland-client.so.0
+libwayland-cursor.so.0
+libwayland-egl.so.1
+```
+
+2️⃣ Create AppDir structure
+```
+
+Easystroke.AppDir/
+├── AppRun
+├── easystroke.desktop
+├── easystroke.png
+└── usr/
+    ├── bin/
+    │   └── easystroke
+    └── lib/
+        └── *.so*
+```
+
+Copy the generated executable first:
+```
+cp /usr/bin/easystroke Easystroke.AppDir/usr/bin/
+```
+
+3️⃣ Copy libraries automatically (IMPORTANT)
+Use this safe approach:
+```
+mkdir -p Easystroke.AppDir/usr/lib
+ldd easystroke | awk '{print $3}' | grep '^/' | xargs -I '{}' cp -v '{}' Easystroke.AppDir/usr/lib/
+```
+Then remove forbidden libs if any slipped in:
+```
+rm -f Easystroke.AppDir/usr/lib/libc.so.*
+rm -f Easystroke.AppDir/usr/lib/libm.so.*
+rm -f Easystroke.AppDir/usr/lib/ld-linux*
+```
+
+4️⃣ Fix library paths (CRITICAL)
+```
+sudo apt install patchelf
+
+patchelf --set-rpath '$ORIGIN/../lib' Easystroke.AppDir/usr/bin/easystroke
+```
+
+Verify:
+```
+ldd Easystroke.AppDir/usr/bin/easystroke
+```
+All libs should resolve to AppDir/usr/lib.
+
+5️⃣ AppRun file
+```
+#!/bin/bash
+HERE="$(dirname "$(readlink -f "$0")")"
+export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
+export GTK_PATH="$HERE/usr/lib/gtk-3.0"
+# exec "$HERE/usr/bin/easystroke" "$@"
+exec -a easystroke "$APPDIR/usr/bin/easystroke" "$@"
+```
+
+Make the AppRun file executable with: 
+```
+chmod +x Easystroke.AppDir/AppRun
+```
+
+6️⃣ Desktop file `easystroke.desktop`
+```
+[Desktop Entry]
+Type=Application
+Name=Easystroke
+Exec=easystroke
+Icon=easystroke
+Categories=Utility;
+```
+
+remember to convert the svg to png file like this: 
+
+```
+sudo apt install librsvg2-bin
+
+rsvg-convert easystroke.svg -w 256 -h 256 -o easystroke.png
+```
+
+7️⃣ Build the AppImage
+
+```
+wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+chmod +x appimagetool-x86_64.AppImage
+
+./appimagetool-x86_64.AppImage Easystroke.AppDir
+```
+
+🎉 You’ll get:
+```
+Easystroke-x86_64.AppImage
+```
+8️⃣ Known caveats (important)
+⚠️ Easystroke:
+
+Requires X11 (won’t work on Wayland-only sessions)
+
+Needs XTEST → works fine if XWayland is present
+
+Needs accessibility permissions sometimes
+
+To run safely:
+```
+GDK_BACKEND=x11 ./Easystroke-x86_64.AppImage
+```
+
+✅ Verdict
+
+✔ Yes, Easystroke can be AppImaged
+✔ Your ldd output is totally suitable
+✔ The GTK3 stack is heavy but stable
+✔ This AppImage will run on older distros too
+
+
+
+
+
+
+
+
+
+
 configs located at(for backing up and moving to another machine):
 ```
 /home/USERNAME/.easystroke
