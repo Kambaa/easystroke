@@ -31,7 +31,6 @@ public:
 
 class Composite : public Trace {
 	int num_x, num_y;
-	int scale_factor;
 	Popup ***pieces;
 	virtual void draw(Point p, Point q);
 	virtual void start_();
