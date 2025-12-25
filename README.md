@@ -1,5 +1,8 @@
 # easystroke mouse gesture application for linux
 
+i couldn't install this app from the deb files, so i searched for a working solution. On a vm with same os (mine was Pardus 25) i compiled the project and copied the artifacts to my machine. Here's how i did it, hope it helps to someone.
+
+
 master branch contains the source code from MRWITEK/easystroke github repo.
 
 markdstjohn/easystroke  contains the source code from markdstjohn/easystroke github repo.
@@ -36,7 +39,11 @@ sudo tar xzvf easystroke_install.tar.gz -C /
 
 
 
+configs located at(for backing up and moving to another machine):
+```
+/home/USERNAME/.easystroke
 
+```
 
 
 ---
