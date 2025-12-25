@@ -1,6 +1,6 @@
 # easystroke mouse gesture application for linux
 
-i couldn't install this app from the deb file on newer Debian/Ubuntu distros, so i searched for a working solution. On a vm with same os (mine was Pardus 25) i compiled the project and copied the artifacts to my machine. Here's how i did it, hope it helps to someone.
+i couldn't install this app from the deb file on newer Debian/Ubuntu distros, and it seems the original repo is not maintained anymore, so i searched for a working solution for me. On a vm with same os (mine was Pardus 25) i compiled the project and copied the artifacts to my machine. Here's how i did it, hope it helps to someone.
 
 
 master branch contains the source code from MRWITEK/easystroke github repo.
