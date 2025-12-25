@@ -32,7 +32,7 @@ archive the files on dev machine ([easystroke_install.tar.gz](easystroke_install
 tar czvf easystroke_install.tar.gz /usr/local/bin/easystroke /usr/local/share/icons/hicolor/scalable/apps/easystroke.svg /usr/local/share/applications/easystroke.desktop /usr/local/share/locale/*/LC_MESSAGES/easystroke.mo
 ```
 
-transfer the archive file to your machine and run this command to extract them (may need the install necessary deps first):
+transfer the archive file to your machine and run this command to extract them (may need the install necessary deps mentioned before, before running the app):
 ```
 sudo tar xzvf easystroke_install.tar.gz -C /
 ```
