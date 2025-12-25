@@ -5,7 +5,7 @@ i couldn't install this app from the deb file on newer Debian/Ubuntu distros, an
 
 master branch contains the source code from MRWITEK/easystroke github repo.
 
-markdstjohn/easystroke  contains the source code from markdstjohn/easystroke github repo.
+markdstjohn/easystroke branch contains the source code from markdstjohn/easystroke github repo.
 
 
 ## my build instructions for PARDUS 25 (debian 13 trixie based):
