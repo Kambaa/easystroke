@@ -24,9 +24,7 @@ make install
 ```
 
 
-
-
-archive the files on dev machine
+archive the files on dev machine ([easystroke_install.tar.gz](easystroke_install.tar.gz) for my machine)
 ```
 tar czvf easystroke_install.tar.gz /usr/local/bin/easystroke /usr/local/share/icons/hicolor/scalable/apps/easystroke.svg /usr/local/share/applications/easystroke.desktop /usr/local/share/locale/*/LC_MESSAGES/easystroke.mo
 ```
