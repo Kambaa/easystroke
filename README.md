@@ -14,7 +14,7 @@ first install the deps (from original easystroke build instructions)
 for Debian/Ubuntu:
 
 ```
-sudo apt-get make install g++ libboost-serialization-dev libgtkmm-3.0-dev libxtst-dev libdbus-glib-1-dev intltool xserver-xorg-dev
+sudo apt-get install make g++ libboost-serialization-dev libgtkmm-3.0-dev libxtst-dev libdbus-glib-1-dev intltool xserver-xorg-dev
 ```
 build the project via:
 ```
